@@ -1,11 +1,18 @@
 body{
   margin:0;
-  font-family: "Courier New", monospace;
-  background:#05070c;
+  font-family:"Courier New", monospace;
+
+  /* ✈️ AIRPLANE SKY BACKGROUND */
+  background:
+    linear-gradient(rgba(5,7,12,0.92), rgba(5,7,12,0.92)),
+    url("https://images.unsplash.com/photo-1506015391300-4802dc74de2e?auto=format&fit=crop&w=1600&q=80");
+
+  background-size:cover;
+  background-position:center;
   color:#c7f9cc;
 }
 
-/* HEADER (cockpit style) */
+/* ✈️ HEADER */
 header{
   text-align:center;
   padding:14px;
@@ -14,14 +21,15 @@ header{
   color:#7CFFB2;
   letter-spacing:3px;
   font-weight:bold;
+  font-size:18px;
 }
 
-/* CONTAINER */
+/* 🧭 MAIN CONTAINER */
 .container{
   padding:15px;
 }
 
-/* CARDS (military panels) */
+/* 🎖️ PANELS (military cockpit style) */
 .card{
   background:#0b1220;
   border:1px solid #1f3b2c;
@@ -32,7 +40,7 @@ header{
   box-shadow:0 0 10px rgba(0,255,180,0.05);
 }
 
-/* INPUTS (cockpit HUD feel) */
+/* ✈️ INPUTS */
 input,select{
   width:100%;
   padding:10px;
@@ -41,10 +49,10 @@ input,select{
   border:1px solid #1f3b2c;
   background:#05070c;
   color:#7CFFB2;
-  font-family: "Courier New", monospace;
+  font-family:"Courier New", monospace;
 }
 
-/* BUTTONS (military green / alert style) */
+/* 🎯 BUTTONS */
 button{
   width:100%;
   padding:10px;
@@ -63,14 +71,14 @@ button:hover{
   color:#05070c;
 }
 
-/* STATS GRID */
+/* 📊 STATS GRID */
 .grid{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:10px;
 }
 
-/* STAT BOXES */
+/* 📡 STAT BOXES */
 .stat{
   background:#0b1220;
   border:1px solid #1f3b2c;
@@ -85,15 +93,16 @@ button:hover{
   color:#2dd4bf;
 }
 
-/* MAP */
+/* 🗺️ MAP STYLE */
 #map{
   height:300px;
   width:100%;
   border:2px solid #1f3b2c;
-  border-radius:6px;
+  border-radius:8px;
+  box-shadow:0 0 15px rgba(45,212,191,0.15);
 }
 
-/* FLIGHT LOG */
+/* ✈️ FLIGHT LOG ENTRY */
 .flight{
   background:#05070c;
   border-left:3px solid #2dd4bf;
@@ -101,18 +110,27 @@ button:hover{
   margin-top:8px;
   border-radius:4px;
   color:#c7f9cc;
+  font-size:13px;
 }
 
-/* BUTTONS INSIDE FLIGHT */
+/* ✏️ BUTTONS INSIDE FLIGHT */
 .flight button{
   width:auto;
   padding:5px 8px;
   margin-top:6px;
   margin-right:5px;
   font-size:12px;
+  background:#0f172a;
+  border:1px solid #1f3b2c;
+  color:#7CFFB2;
 }
 
-/* SCANNER LINE EFFECT */
+.flight button:hover{
+  background:#2dd4bf;
+  color:#05070c;
+}
+
+/* ✈️ SMALL HUD EFFECT */
 .card::after{
   content:"";
   display:block;
