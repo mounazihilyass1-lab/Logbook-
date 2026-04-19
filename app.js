@@ -26,7 +26,7 @@ function initMap(){
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 }
 
-// ===== DRAW =====
+// ===== DRAW ROUTES =====
 function drawRoutes(){
 
   if(!map) return;
@@ -51,6 +51,21 @@ function drawRoutes(){
         .addTo(map);
     }
   });
+}
+
+// ===== DISTANCE =====
+function getDistance(a,b){
+  const R=6371;
+  const dLat=(b[0]-a[0])*Math.PI/180;
+  const dLon=(b[1]-a[1])*Math.PI/180;
+
+  const lat1=a[0]*Math.PI/180;
+  const lat2=b[0]*Math.PI/180;
+
+  const aVal=Math.sin(dLat/2)**2 +
+    Math.sin(dLon/2)**2*Math.cos(lat1)*Math.cos(lat2);
+
+  return R*2*Math.atan2(Math.sqrt(aVal),Math.sqrt(1-aVal));
 }
 
 // ===== ADD / EDIT =====
@@ -80,7 +95,7 @@ function addFlight(){
   render();
 }
 
-// ===== EDIT BUTTON =====
+// ===== EDIT =====
 function editFlight(i){
   const f=flights[i];
 
@@ -108,25 +123,12 @@ function save(){
   localStorage.setItem("flights",JSON.stringify(flights));
 }
 
-// ===== DISTANCE =====
-function getDistance(a,b){
-  const R=6371;
-  const dLat=(b[0]-a[0])*Math.PI/180;
-  const dLon=(b[1]-a[1])*Math.PI/180;
-
-  const lat1=a[0]*Math.PI/180;
-  const lat2=b[0]*Math.PI/180;
-
-  const aVal=Math.sin(dLat/2)**2 +
-    Math.sin(dLon/2)**2*Math.cos(lat1)*Math.cos(lat2);
-
-  return R*2*Math.atan2(Math.sqrt(aVal),Math.sqrt(1-aVal));
-}
-
 // ===== RENDER =====
 function render(){
 
+  const list=document.getElementById("list");
   list.innerHTML="";
+
   let total=0,pic=0,ifr=0,land=0,dist=0;
 
   flights.forEach((f,i)=>{
@@ -151,11 +153,11 @@ function render(){
     `;
   });
 
-  total.textContent=total.toFixed(1);
-  pic.textContent=pic.toFixed(1);
-  ifr.textContent=ifr.toFixed(1);
-  land.textContent=land;
-  dist.textContent=Math.round(dist);
+  document.getElementById("total").textContent = total.toFixed(1);
+  document.getElementById("pic").textContent   = pic.toFixed(1);
+  document.getElementById("ifr").textContent   = ifr.toFixed(1);
+  document.getElementById("land").textContent  = land;
+  document.getElementById("dist").textContent  = Math.round(dist);
 
   if(map){
     map.eachLayer(l=>{
@@ -210,7 +212,6 @@ async function start(){
   await loadAirports();
   initMap();
   render();
-
   setTimeout(()=>map.invalidateSize(),500);
 }
 
