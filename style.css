@@ -12,9 +12,7 @@ header{
   font-weight:bold;
 }
 
-.container{
-  padding:15px;
-}
+.container{ padding:15px; }
 
 .card{
   background:#111827;
@@ -51,7 +49,7 @@ button{
 
 #map{
   height:300px;
-  border-radius:10px;
+  width:100%;
 }
 
 .flight{
