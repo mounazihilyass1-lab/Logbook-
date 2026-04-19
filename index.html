@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Pilot Logbook</title>
 
 <link rel="stylesheet" href="style.css">
@@ -14,7 +13,6 @@
 <!-- MAP -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
 </head>
 
 <body>
@@ -23,6 +21,7 @@
 
 <div class="container">
 
+<!-- FORM -->
 <div class="card">
   <input id="date" type="date">
   <input id="from" placeholder="Departure ICAO">
@@ -46,27 +45,32 @@
     <option>NIGHT</option>
   </select>
 
-  <button onclick="addFlight()">ADD FLIGHT</button>
+  <button onclick="addFlight()">ADD / UPDATE FLIGHT</button>
 </div>
 
+<!-- STATS -->
 <div class="grid">
   <div class="stat"><h2 id="total">0</h2><div>Total</div></div>
   <div class="stat"><h2 id="pic">0</h2><div>PIC</div></div>
   <div class="stat"><h2 id="ifr">0</h2><div>IFR</div></div>
   <div class="stat"><h2 id="land">0</h2><div>Landings</div></div>
-  <div class="stat"><h2 id="dist">0</h2><div>KM Flown</div></div>
+  <div class="stat"><h2 id="dist">0</h2><div>KM</div></div>
 </div>
 
+<!-- MAP -->
 <div class="card">
   <h3>Flight Map</h3>
   <div id="map"></div>
 </div>
 
+<!-- EXPORT / IMPORT -->
 <div class="card">
   <button onclick="exportPDF()">EXPORT PDF</button>
   <button onclick="exportJSON()">EXPORT JSON</button>
+  <input type="file" id="importFile" accept=".json" onchange="importJSON(event)">
 </div>
 
+<!-- LIST -->
 <div class="card">
   <h3>Flights</h3>
   <div id="list"></div>
