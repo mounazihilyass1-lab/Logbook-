@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlightLog EFB Pro</title>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+body{
+  margin:0;
+  font-family:DM Sans;
+  background:#0a0f1a;
+  color:#e6eefc;
+}
+
+header{
+  padding:18px;
+  background:#111827;
+  border-bottom:1px solid #1f2937;
+}
+
+h1{margin:0;font-size:18px;letter-spacing:2px;}
+
+.container{padding:15px;}
+
+.card{
+  background:#111827;
+  padding:14px;
+  border-radius:12px;
+  margin-bottom:12px;
+  border:1px solid #1f2937;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin:5px 0;
+  border-radius:8px;
+  border:1px solid #374151;
+  background:#0b0f17;
+  color:white;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:#3b82f6;
+  color:white;
+  font-weight:bold;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.stat{
+  background:#0f172a;
+  padding:10px;
+  border-radius:10px;
+  text-align:center;
+  border:1px solid #1f2937;
+}
+
+.small{font-size:12px;opacity:0.7}
+
+.flight{
+  background:#0f172a;
+  padding:10px;
+  margin:8px 0;
+  border-radius:8px;
+  border-left:3px solid #3b82f6;
+  font-family:DM Mono;
+  font-size:12px;
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+  <h1>✈️ FLIGHTLOG EFB PRO</h1>
+</header>
+
+<div class="container">
+
+<!-- FORM -->
+<div class="card">
+  <input id="date" type="date">
+  <input id="from" placeholder="DEP ICAO">
+  <input id="to" placeholder="ARR ICAO">
+  <input id="hours" type="number" step="0.1" placeholder="HOURS">
+
+  <select id="type">
+    <option value="PIC">PIC</option>
+    <option value="SIC">SIC</option>
+  </select>
+
+  <select id="rule">
+    <option value="VFR">VFR</option>
+    <option value="IFR">IFR</option>
+  </select>
+
+  <button onclick="addFlight()">+ ADD FLIGHT</button>
+</div>
+
+<!-- STATS -->
+<div class="card grid">
+  <div class="stat">
+    <div id="total">0</div>
+    <div class="small">TOTAL HRS</div>
+  </div>
+
+  <div class="stat">
+    <div id="pic">0</div>
+    <div class="small">PIC</div>
+  </div>
+
+  <div class="stat">
+    <div id="ifr">0</div>
+    <div class="small">IFR</div>
+  </div>
+
+  <div class="stat">
+    <div id="count">0</div>
+    <div class="small">FLIGHTS</div>
+  </div>
+</div>
+
+<!-- BUTTONS -->
+<div class="card">
+  <button onclick="exportPDF()">📄 EXPORT PDF LOGBOOK</button>
+</div>
+
+<!-- LIST -->
+<div class="card">
+  <h3>LOGBOOK</h3>
+  <div id="list"></div>
+</div>
+
+</div>
+
+<script>
+let flights = JSON.parse(localStorage.getItem("flights")) || [];
+
+function addFlight(){
+  flights.unshift({
+    date:date.value,
+    from:from.value.toUpperCase(),
+    to:to.value.toUpperCase(),
+    hours:parseFloat(hours.value),
+    type:type.value,
+    rule:rule.value
+  });
+
+  save();
+  render();
+}
+
+function save(){
+  localStorage.setItem("flights",JSON.stringify(flights));
+}
+
+function render(){
+  let list=document.getElementById("list");
+  list.innerHTML="";
+
+  let total=0,pic=0,ifr=0;
+
+  flights.forEach((f,i)=>{
+    total+=f.hours;
+    if(f.type==="PIC") pic+=f.hours;
+    if(f.rule==="IFR") ifr+=f.hours;
+
+    list.innerHTML+=`
+      <div class="flight">
+        ${f.date}<br>
+        ${f.from} → ${f.to}<br>
+        ${f.hours}h | ${f.type} | ${f.rule}
+      </div>
+    `;
+  });
+
+  totalEl.textContent=total.toFixed(1);
+  picEl.textContent=pic.toFixed(1);
+  ifrEl.textContent=ifr.toFixed(1);
+  count.textContent=flights.length;
+}
+
+function exportPDF(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.text("FLIGHT LOGBOOK",10,10);
+
+  let y=20;
+
+  flights.forEach(f=>{
+    doc.text(`${f.date} ${f.from}-${f.to} ${f.hours}h ${f.type} ${f.rule}`,10,y);
+    y+=10;
+  });
+
+  doc.save("logbook.pdf");
+}
+
+render();
+</script>
+
+</body>
+</html>
