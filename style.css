@@ -1,61 +1,129 @@
 body{
   margin:0;
-  font-family:Arial;
-  background:#0b0f17;
-  color:white;
+  font-family: "Courier New", monospace;
+  background:#05070c;
+  color:#c7f9cc;
 }
 
+/* HEADER (cockpit style) */
 header{
   text-align:center;
-  padding:15px;
-  background:#111827;
+  padding:14px;
+  background:#0b1220;
+  border-bottom:2px solid #1f3b2c;
+  color:#7CFFB2;
+  letter-spacing:3px;
   font-weight:bold;
 }
 
-.container{ padding:15px; }
-
-.card{
-  background:#111827;
-  padding:12px;
-  border-radius:10px;
-  margin-bottom:10px;
+/* CONTAINER */
+.container{
+  padding:15px;
 }
 
-input,select,button{
+/* CARDS (military panels) */
+.card{
+  background:#0b1220;
+  border:1px solid #1f3b2c;
+  border-left:4px solid #2dd4bf;
+  padding:12px;
+  border-radius:6px;
+  margin-bottom:12px;
+  box-shadow:0 0 10px rgba(0,255,180,0.05);
+}
+
+/* INPUTS (cockpit HUD feel) */
+input,select{
   width:100%;
   padding:10px;
-  margin-top:5px;
-  border-radius:8px;
-  border:none;
+  margin-top:6px;
+  border-radius:4px;
+  border:1px solid #1f3b2c;
+  background:#05070c;
+  color:#7CFFB2;
+  font-family: "Courier New", monospace;
 }
 
+/* BUTTONS (military green / alert style) */
 button{
-  background:#3b82f6;
-  color:white;
+  width:100%;
+  padding:10px;
+  margin-top:6px;
+  border-radius:4px;
+  border:none;
+  background:#1f3b2c;
+  color:#7CFFB2;
+  font-weight:bold;
+  letter-spacing:1px;
+  cursor:pointer;
 }
 
+button:hover{
+  background:#2dd4bf;
+  color:#05070c;
+}
+
+/* STATS GRID */
 .grid{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:10px;
 }
 
+/* STAT BOXES */
 .stat{
-  background:#0f172a;
+  background:#0b1220;
+  border:1px solid #1f3b2c;
   padding:10px;
-  border-radius:10px;
+  border-radius:6px;
   text-align:center;
+  color:#7CFFB2;
 }
 
+.stat h2{
+  margin:0;
+  color:#2dd4bf;
+}
+
+/* MAP */
 #map{
   height:300px;
   width:100%;
+  border:2px solid #1f3b2c;
+  border-radius:6px;
 }
 
+/* FLIGHT LOG */
 .flight{
-  background:#0f172a;
+  background:#05070c;
+  border-left:3px solid #2dd4bf;
   padding:10px;
-  
   margin-top:8px;
-  border-radius:10px;
+  border-radius:4px;
+  color:#c7f9cc;
+}
+
+/* BUTTONS INSIDE FLIGHT */
+.flight button{
+  width:auto;
+  padding:5px 8px;
+  margin-top:6px;
+  margin-right:5px;
+  font-size:12px;
+}
+
+/* SCANNER LINE EFFECT */
+.card::after{
+  content:"";
+  display:block;
+  height:2px;
+  background:linear-gradient(90deg,transparent,#2dd4bf,transparent);
+  margin-top:8px;
+  animation:scan 3s infinite;
+}
+
+@keyframes scan{
+  0%{opacity:0;}
+  50%{opacity:1;}
+  100%{opacity:0;}
 }
