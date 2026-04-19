@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,87 +8,67 @@
 
 <link rel="stylesheet" href="style.css">
 
-<!-- PDF LIBRARY -->
+<!-- PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- MAP -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 </head>
 
 <body>
 
-<header>
-✈ PILOT LOGBOOK
-</header>
+<header>✈ PILOT LOGBOOK</header>
 
 <div class="container">
 
-<!-- FORM -->
 <div class="card">
-
   <input id="date" type="date">
   <input id="from" placeholder="Departure ICAO">
   <input id="to" placeholder="Arrival ICAO">
-  <input id="hours" type="number" step="0.1" placeholder="Flight time (hours)">
+  <input id="hours" type="number" step="0.1" placeholder="Hours">
   <input id="landings" type="number" placeholder="Landings">
 
   <select id="type">
-    <option value="PIC">PIC</option>
-    <option value="SIC">SIC</option>
-    <option value="DUAL">DUAL</option>
+    <option>PIC</option>
+    <option>SIC</option>
+    <option>DUAL</option>
   </select>
 
   <select id="rule">
-    <option value="VFR">VFR</option>
-    <option value="IFR">IFR</option>
+    <option>VFR</option>
+    <option>IFR</option>
   </select>
 
   <select id="night">
-    <option value="DAY">DAY</option>
-    <option value="NIGHT">NIGHT</option>
+    <option>DAY</option>
+    <option>NIGHT</option>
   </select>
 
   <button onclick="addFlight()">ADD FLIGHT</button>
 </div>
 
-<!-- STATS -->
 <div class="grid">
-  <div class="stat">
-    <h2 id="total">0</h2>
-    <div class="small">TOTAL HOURS</div>
-  </div>
-
-  <div class="stat">
-    <h2 id="pic">0</h2>
-    <div class="small">PIC</div>
-  </div>
-
-  <div class="stat">
-    <h2 id="ifr">0</h2>
-    <div class="small">IFR</div>
-  </div>
-
-  <div class="stat">
-    <h2 id="land">0</h2>
-    <div class="small">LANDINGS</div>
-  </div>
+  <div class="stat"><h2 id="total">0</h2><div>Total</div></div>
+  <div class="stat"><h2 id="pic">0</h2><div>PIC</div></div>
+  <div class="stat"><h2 id="ifr">0</h2><div>IFR</div></div>
+  <div class="stat"><h2 id="land">0</h2><div>Landings</div></div>
+  <div class="stat"><h2 id="dist">0</h2><div>KM Flown</div></div>
 </div>
 
-<!-- FILTER -->
 <div class="card">
-  <input type="month" id="filterMonth">
-  <button onclick="applyFilter()">FILTER</button>
-  <button onclick="resetFilter()">RESET</button>
+  <h3>Flight Map</h3>
+  <div id="map"></div>
 </div>
 
-<!-- EXPORT -->
 <div class="card">
-  <button onclick="exportJSON()">EXPORT JSON</button>
   <button onclick="exportPDF()">EXPORT PDF</button>
-  <input type="file" id="fileInput">
+  <button onclick="exportJSON()">EXPORT JSON</button>
 </div>
 
-<!-- LIST -->
 <div class="card">
-  <h3>FLIGHTS</h3>
+  <h3>Flights</h3>
   <div id="list"></div>
 </div>
 
