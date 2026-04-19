@@ -1,12 +1,14 @@
-let flights = JSON.parse(localStorage.getItem("my_flights")) || [];
-let view = null;
+let flights = JSON.parse(localStorage.getItem("flights")) || [];
+let filtered = null;
 
 // =====================
 // ADD FLIGHT
 // =====================
 function addFlight(){
 
-  if(!date.value || !from.value || !to.value || !hours.value) return;
+  if(!date.value || !from.value || !to.value || !hours.value){
+    return;
+  }
 
   flights.unshift({
     date:date.value,
@@ -30,30 +32,34 @@ function addFlight(){
 }
 
 // =====================
-// SAVE
+// SAVE LOCAL STORAGE
 // =====================
 function save(){
-  localStorage.setItem("my_flights", JSON.stringify(flights));
+  localStorage.setItem("flights", JSON.stringify(flights));
 }
 
 // =====================
-// RENDER
+// RENDER LIST
 // =====================
 function render(data = flights){
 
-  const list=document.getElementById("list");
-  list.innerHTML="";
+  const list = document.getElementById("list");
+  list.innerHTML = "";
 
-  let total=0,pic=0,ifr=0,land=0;
+  let total = 0;
+  let pic = 0;
+  let ifr = 0;
+  let land = 0;
 
   data.forEach((f,i)=>{
-    total+=f.hours;
-    land+=f.landings;
 
-    if(f.type==="PIC") pic+=f.hours;
-    if(f.rule==="IFR") ifr+=f.hours;
+    total += f.hours;
+    land += f.landings;
 
-    list.innerHTML+=`
+    if(f.type === "PIC") pic += f.hours;
+    if(f.rule === "IFR") ifr += f.hours;
+
+    list.innerHTML += `
       <div class="flight">
         ${f.date} | ${f.from} → ${f.to}<br>
         ${f.hours}h | ${f.type} | ${f.rule} | ${f.night}<br>
@@ -65,10 +71,10 @@ function render(data = flights){
     `;
   });
 
-  document.getElementById("total").textContent=total.toFixed(1);
-  document.getElementById("pic").textContent=pic.toFixed(1);
-  document.getElementById("ifr").textContent=ifr.toFixed(1);
-  document.getElementById("land").textContent=land;
+  document.getElementById("total").textContent = total.toFixed(1);
+  document.getElementById("pic").textContent = pic.toFixed(1);
+  document.getElementById("ifr").textContent = ifr.toFixed(1);
+  document.getElementById("land").textContent = land;
 }
 
 // =====================
@@ -86,14 +92,14 @@ function deleteFlight(i){
 function editFlight(i){
   const f = flights[i];
 
-  date.value=f.date;
-  from.value=f.from;
-  to.value=f.to;
-  hours.value=f.hours;
-  landings.value=f.landings;
-  type.value=f.type;
-  rule.value=f.rule;
-  night.value=f.night;
+  date.value = f.date;
+  from.value = f.from;
+  to.value = f.to;
+  hours.value = f.hours;
+  landings.value = f.landings;
+  type.value = f.type;
+  rule.value = f.rule;
+  night.value = f.night;
 
   flights.splice(i,1);
   save();
@@ -105,13 +111,13 @@ function editFlight(i){
 // =====================
 function applyFilter(){
   const val = filterMonth.value;
-  view = flights.filter(f => f.date.startsWith(val));
-  render(view);
+  filtered = flights.filter(f => f.date.startsWith(val));
+  render(filtered);
 }
 
 function resetFilter(){
-  view = null;
-  filterMonth.value="";
+  filtered = null;
+  filterMonth.value = "";
   render();
 }
 
@@ -119,41 +125,54 @@ function resetFilter(){
 // EXPORT JSON
 // =====================
 function exportJSON(){
-  const blob=new Blob([JSON.stringify(flights,null,2)],{type:"application/json"});
-  const url=URL.createObjectURL(blob);
+  const blob = new Blob([JSON.stringify(flights,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
 
-  const a=document.createElement("a");
-  a.href=url;
-  a.download="my_logbook.json";
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "logbook.json";
   a.click();
 }
 
 // =====================
-// EXPORT PDF (simple)
+// EXPORT PDF (REAL FIX)
 // =====================
 function exportPDF(){
-  let text="FLIGHT LOGBOOK\n\n";
 
-  flights.forEach(f=>{
-    text+=`${f.date} ${f.from}-${f.to} ${f.hours}h ${f.type} ${f.rule}\n`;
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.setFont("helvetica");
+  doc.setFontSize(12);
+
+  doc.text("PILOT LOGBOOK", 10, 10);
+
+  let y = 20;
+
+  flights.forEach(f => {
+    doc.text(
+      `${f.date} ${f.from}-${f.to} ${f.hours}h ${f.type} ${f.rule}`,
+      10,
+      y
+    );
+    y += 8;
+
+    if(y > 280){
+      doc.addPage();
+      y = 10;
+    }
   });
 
-  const blob=new Blob([text],{type:"application/pdf"});
-  const url=URL.createObjectURL(blob);
-
-  const a=document.createElement("a");
-  a.href=url;
-  a.download="logbook.pdf";
-  a.click();
+  doc.save("pilot_logbook.pdf");
 }
 
 // =====================
 // IMPORT JSON
 // =====================
-fileInput.onchange = e=>{
-  const reader=new FileReader();
+fileInput.onchange = e => {
+  const reader = new FileReader();
 
-  reader.onload = ev=>{
+  reader.onload = ev => {
     flights = JSON.parse(ev.target.result);
     save();
     render();
@@ -162,4 +181,5 @@ fileInput.onchange = e=>{
   reader.readAsText(e.target.files[0]);
 };
 
+// INIT
 render();
